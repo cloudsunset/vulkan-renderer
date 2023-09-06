@@ -16,9 +16,13 @@ private:
 	const int width = 800;
 	const int height = 640;
 
-	vkoWindow _vkoWindow{ width, height, "Vulkan Engine" };
+	VkInstance _instance;
 
-	void BuildWindow();
+	vkoWindow _window{ width, height, "Vulkan Engine" };
+
+	void BuildInstance();
+
+	//void BuildWindow();
 
 	
 

@@ -1,5 +1,5 @@
 ﻿
-add_executable (vulkan_engine "main.cpp"  "core.hpp" "core.cpp" "window.cpp")
+add_executable (vulkan_engine "main.cpp"  "core.hpp" "core.cpp" "window.cpp" )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET vulkan_engine PROPERTY CXX_STANDARD 20)
