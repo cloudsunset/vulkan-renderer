@@ -1,21 +1,16 @@
 #pragma once
 #include "window.hpp"
+#include "device.hpp"
+#include "instance.hpp"
 #include <vector>
 
+struct EngineConfigInfo
+{
+	const int width;
+	const int height;
+	const char* Enginename;
 
-const std::vector<const char*> validationLayers =
-{ 
-	"VK_LAYER_KHRONOS_validation"
 };
-
-#ifdef NDEBUG
-const bool enableValidationLayers = false;
-#else 
-const bool enableValidationLayers = true;
-#endif
-
-
-
 
 class Engine
 {
@@ -29,23 +24,20 @@ public:
 
 private:
 
+	const char* instance_name = "Vulkan Engine";
+
 	const int width = 800;
 	const int height = 640;
 
-	VkInstance _instance;
-	VkDebugUtilsMessengerEXT debugMessenger;
+	vkoWindow _window{ width, height, instance_name };
+	vkoInstance m_Instance{ instance_name };
 
-	vkoWindow _window{ width, height, "Vulkan Engine" };
 
-	void BuildInstance();
+	// make sure instance is created before device
+	//vkoDevice _device;
 
-	void BuildDebugMessenger();
+	//void checkGPU();
 
-	bool checkValidationLayerSupport();
-
-	std::vector<const char*> getRequiredExtensions();
-
-	void enumerateExtensions();
 
 	
 
