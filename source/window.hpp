@@ -14,7 +14,6 @@ public:
 
 	bool shouldClose() { return glfwWindowShouldClose(window); }
 
-
 private:
 
 	void BuildWindow();

@@ -10,6 +10,7 @@ public:
 	vkoInstance(const char* instance_name);
 	~vkoInstance();
 
+	VkInstance& get();
 
 private:
 

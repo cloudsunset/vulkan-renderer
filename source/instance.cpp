@@ -22,6 +22,11 @@ vkoInstance::~vkoInstance()
 	vkDestroyInstance(m_Instance, nullptr);
 }
 
+VkInstance& vkoInstance::get()
+{
+	return m_Instance;
+}
+
 void vkoInstance::BuildInstance(const char* instance_name)
 {
 	if (vlayers::enableValidationLayers && !vlayers::checkValidationLayerSupport()) {

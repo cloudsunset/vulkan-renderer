@@ -31,6 +31,7 @@ private:
 
 	vkoWindow _window{ width, height, instance_name };
 	vkoInstance m_Instance{ instance_name };
+	vkoDevice m_Device{ m_Instance.get(), _window};
 
 
 	// make sure instance is created before device
