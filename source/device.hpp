@@ -29,6 +29,7 @@ public:
 	~vkoDevice();
 
 	VkPhysicalDeviceProperties properties;
+	VkPhysicalDeviceFeatures deviceFeatures{};
 
 private:
 
@@ -36,9 +37,13 @@ private:
 	vkoWindow &_window;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	VkDevice _device;
+
+	VkQueue graphicsQueue;
 	
 
 	void BuildPhysicalDevice();
+
+	void BuildLogicalDevice();
 
 	bool VerifyDevice(VkPhysicalDevice device);
 

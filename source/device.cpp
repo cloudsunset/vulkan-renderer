@@ -1,4 +1,5 @@
 #include "device.hpp"
+#include "vlayers.hpp"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -10,7 +11,7 @@ vkoDevice::vkoDevice(VkInstance &instance, vkoWindow &window) : _instance{ insta
 
 vkoDevice::~vkoDevice()
 {
-
+	vkDestroyDevice(_device, nullptr);
 }
 
 void vkoDevice::BuildPhysicalDevice()
@@ -82,6 +83,43 @@ void vkoDevice::BuildPhysicalDevice()
 	vkGetPhysicalDeviceProperties(physicalDevice, &properties);
 	std::cout << "physical device: " << properties.deviceName << std::endl;
 	
+}
+
+void vkoDevice::BuildLogicalDevice()
+{
+	QueueFamilyIndices indices = FindQueueFamilies(physicalDevice);
+
+	VkDeviceQueueCreateInfo queueCreateInfo{};
+	queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+	queueCreateInfo.queueCount = 1;
+
+	float queuePriority = 1.0f;
+	queueCreateInfo.pQueuePriorities = &queuePriority;
+
+	VkDeviceCreateInfo createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+
+	createInfo.pQueueCreateInfos = &queueCreateInfo;
+	createInfo.queueCreateInfoCount = 1;
+
+	createInfo.pEnabledFeatures = &deviceFeatures;
+
+	createInfo.enabledExtensionCount = 0;
+
+	if (vlayers::enableValidationLayers) {
+		createInfo.enabledLayerCount = static_cast<uint32_t>(vlayers::validationLayers.size());
+		createInfo.ppEnabledLayerNames = vlayers::validationLayers.data();
+	}
+	else {
+		createInfo.enabledLayerCount = 0;
+	}
+
+	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &_device) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create logical device!");
+	}
+
+	vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &graphicsQueue);
 }
 
 bool vkoDevice::VerifyDevice(VkPhysicalDevice device)
