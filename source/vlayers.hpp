@@ -25,13 +25,4 @@ namespace vlayers
 
 	void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
-
-
-
-
-
-
-
-
-
 }

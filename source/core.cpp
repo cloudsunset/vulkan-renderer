@@ -7,7 +7,12 @@
 
 Engine::Engine()
 {
-	// check validatio layers
+	window = std::make_shared<vkoWindow>(width, height);
+	instance = std::make_shared<vkoInstance>(instance_name);
+	window->createSurface(instance->get());
+	VkSurfaceKHR S = window->getSurface();
+	device = std::make_unique<vkoDevice>(instance->get(), S);
+
 }
 
 Engine::~Engine()
@@ -17,7 +22,9 @@ Engine::~Engine()
 
 void Engine::Run()
 {
-	while (!_window.shouldClose())
+
+
+	while (!window->shouldClose())
 	{
 		glfwPollEvents();
 		

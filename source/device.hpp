@@ -2,22 +2,12 @@
 #include "window.hpp"
 #include <optional>
 
-
-//struct QueueFamilyIndices
-//{
-//	uint32_t graphicsFamily;
-//	uint32_t presentFamily;
-//	bool graphicsFamilyHasValue = false;
-//	bool presentFamilyHasValue = false;
-//	bool isComplete() { return graphicsFamilyHasValue; }
-//	//bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
-//};
-
 struct QueueFamilyIndices {
 	std::optional<uint32_t> graphicsFamily;
+	std::optional<uint32_t> presentFamily;
 
 	bool isComplete() {
-		return graphicsFamily.has_value();
+		return graphicsFamily.has_value() && presentFamily.has_value();
 	}
 };
 
@@ -25,28 +15,31 @@ class vkoDevice
 {
 public:
 
-	vkoDevice(VkInstance &instance, vkoWindow &window);
+	vkoDevice(VkInstance &instance, VkSurfaceKHR& surface);
 	~vkoDevice();
 
-	VkPhysicalDeviceProperties properties;
+	VkPhysicalDeviceProperties properties{};
 	VkPhysicalDeviceFeatures deviceFeatures{};
 
 private:
 
 	VkInstance &_instance;
-	vkoWindow &_window;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	VkDevice _device;
 
 	VkQueue graphicsQueue;
+	VkQueue presentQueue;
 	
 
-	void BuildPhysicalDevice();
+	void BuildPhysicalDevice(VkSurfaceKHR& surface);
 
-	void BuildLogicalDevice();
+	void BuildLogicalDevice(VkSurfaceKHR& surface);
 
-	bool VerifyDevice(VkPhysicalDevice device);
 
-	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
+	void DestroyLogicalDevice();
+
+	bool VerifyDevice(VkPhysicalDevice device, VkSurfaceKHR& surface);
+
+	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR& surface);
 
 };

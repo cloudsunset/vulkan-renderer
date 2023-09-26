@@ -6,20 +6,12 @@
 vkoInstance::vkoInstance(const char* instance_name)
 {
 	BuildInstance(instance_name);
+	std::cout << "Build Instance" << std::endl;
 }
 
 vkoInstance::~vkoInstance()
 {
 
-	std::cout << "destructors" << std::endl;
-	if (vlayers::enableValidationLayers)
-	{
-		vlayers::DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr);
-		std::cout << "DestroyDebugUtilsMessengerEXT" << std::endl;
-	}
-
-
-	vkDestroyInstance(m_Instance, nullptr);
 }
 
 VkInstance& vkoInstance::get()
@@ -29,6 +21,8 @@ VkInstance& vkoInstance::get()
 
 void vkoInstance::BuildInstance(const char* instance_name)
 {
+	//std::cout << "Bulding Instance" << std::endl;
+
 	if (vlayers::enableValidationLayers && !vlayers::checkValidationLayerSupport()) {
 		throw std::runtime_error("validation layers requested, but not available!");
 	}
@@ -77,6 +71,19 @@ void vkoInstance::BuildInstance(const char* instance_name)
 
 	vlayers::BuildDebugMessenger(m_Instance, m_DebugMessenger);
 
+}
+
+void vkoInstance::DestroyInstance()
+{
+	std::cout << "destructors" << std::endl;
+	if (vlayers::enableValidationLayers)
+	{
+		vlayers::DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr);
+		std::cout << "DestroyDebugUtilsMessengerEXT" << std::endl;
+	}
+
+
+	vkDestroyInstance(m_Instance, nullptr);
 }
 
 

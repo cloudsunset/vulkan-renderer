@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.1)
+﻿cmake_minimum_required (VERSION 3.2)
 
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
@@ -7,7 +7,6 @@ endif()
 
 set(CMAKE_BUILD_TYPE Debug)
 
-project ("vulkan_engine")
+project ("vulkan_renderer")
 
-# Inclua subprojetos.
 add_subdirectory ("source")

@@ -21,26 +21,22 @@ public:
 
 	void Run();
 
-
 private:
 
-	const char* instance_name = "Vulkan Engine";
+	// TODO solve device class conversion problem / maybe substiture window class for surface in arguments of device constructor
 
+	const char* instance_name = "Vulkan Renderer";
 	const int width = 800;
 	const int height = 640;
+	// preciso criar a surface na window e a surface precisa da instance mas a window e criada antes da instance
 
-	vkoWindow _window{ width, height, instance_name };
-	vkoInstance m_Instance{ instance_name };
-	vkoDevice m_Device{ m_Instance.get(), _window};
+	std::shared_ptr<vkoWindow>  window;
 
+	std::shared_ptr<vkoInstance>  instance;
 
-	// make sure instance is created before device
-	//vkoDevice _device;
-
-	//void checkGPU();
-
-
+	// m_Instance.get(), _window
 	
+	std::unique_ptr<vkoDevice> device;
 
 };
 
