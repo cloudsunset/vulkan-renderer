@@ -11,7 +11,6 @@ vkoInstance::vkoInstance(const char* instance_name)
 
 vkoInstance::~vkoInstance()
 {
-
 }
 
 VkInstance& vkoInstance::get()
@@ -21,7 +20,6 @@ VkInstance& vkoInstance::get()
 
 void vkoInstance::BuildInstance(const char* instance_name)
 {
-	//std::cout << "Bulding Instance" << std::endl;
 
 	if (vlayers::enableValidationLayers && !vlayers::checkValidationLayerSupport()) {
 		throw std::runtime_error("validation layers requested, but not available!");
@@ -62,8 +60,6 @@ void vkoInstance::BuildInstance(const char* instance_name)
 
 	vext::enumerateExtensions();
 
-	// validation layers
-
 	if (vkCreateInstance(&createInfo, nullptr, &m_Instance) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to create instance!");
@@ -81,7 +77,6 @@ void vkoInstance::DestroyInstance()
 		vlayers::DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr);
 		std::cout << "DestroyDebugUtilsMessengerEXT" << std::endl;
 	}
-
 
 	vkDestroyInstance(m_Instance, nullptr);
 }

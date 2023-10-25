@@ -19,7 +19,6 @@ private:
 
 	void BuildInstance(const char* instance_name);
 	void DestroyInstance();
-
 	
 	VkInstance m_Instance;
 	VkDebugUtilsMessengerEXT m_DebugMessenger;

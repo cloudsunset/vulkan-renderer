@@ -1,5 +1,4 @@
 ﻿#include "core.hpp"
-
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>

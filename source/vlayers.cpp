@@ -66,7 +66,6 @@ bool vlayers::checkValidationLayerSupport()
 
 void vlayers::BuildDebugMessenger(VkInstance& instance, VkDebugUtilsMessengerEXT& debugMessenger)
 {
-
 	if (!enableValidationLayers) return;
 
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
@@ -75,7 +74,5 @@ void vlayers::BuildDebugMessenger(VkInstance& instance, VkDebugUtilsMessengerEXT
 	if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
 		throw std::runtime_error("failed to set up debug messenger!");
 	}
-	
-	std::cout << "BuildDebugMessenger" << std::endl;
 }
 

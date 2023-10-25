@@ -10,23 +10,18 @@ Engine::Engine()
 	window = std::make_shared<vkoWindow>(width, height);
 	instance = std::make_shared<vkoInstance>(instance_name);
 	window->createSurface(instance->get());
-	VkSurfaceKHR S = window->getSurface();
-	device = std::make_unique<vkoDevice>(instance->get(), S);
-
+	device = std::make_shared<vkoDevice>(instance->get(), window->getSurface());
+	swapChain = std::make_shared<vkoSwapChain>(device, window);
 }
 
 Engine::~Engine()
 {
-
 }
 
 void Engine::Run()
 {
-
-
 	while (!window->shouldClose())
 	{
 		glfwPollEvents();
-		
 	}
 }

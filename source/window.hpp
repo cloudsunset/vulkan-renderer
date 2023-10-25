@@ -15,7 +15,7 @@ public:
 	bool shouldClose() { return glfwWindowShouldClose(window); }
 
 	inline GLFWwindow* getWindow() { return window; }
-	inline VkSurfaceKHR getSurface(){ return surface; }
+	inline VkSurfaceKHR& getSurface(){ return surface; }
 
 	void BuildWindow();
 	void createSurface(VkInstance& instance);
@@ -24,9 +24,6 @@ public:
 	void destroyWindow();
 
 private:
-
-	
-	
 
 	int width = 0;
 	int height = 0;

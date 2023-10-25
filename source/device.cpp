@@ -5,22 +5,18 @@
 #include <vector>
 #include <set>
 
-vkoDevice::vkoDevice(VkInstance &instance, VkSurfaceKHR& surface) : _instance{ instance }
+vkoDevice::vkoDevice(VkInstance &instance, VkSurfaceKHR &surface) : _instance{ instance }
 {
 	BuildPhysicalDevice(surface);
-	std::cout << "Build PhysicalDevice" << std::endl;
-
-	
+	BuildLogicalDevice(surface);
 }
 
 vkoDevice::~vkoDevice()
 {
-	
 }
 
 void vkoDevice::BuildPhysicalDevice(VkSurfaceKHR& surface)
 {
-
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(_instance, &deviceCount, nullptr);
 
@@ -49,17 +45,14 @@ void vkoDevice::BuildPhysicalDevice(VkSurfaceKHR& surface)
 
 	vkGetPhysicalDeviceProperties(physicalDevice, &properties);
 	std::cout << "physical device: " << properties.deviceName << std::endl;
-	
 }
 
 void vkoDevice::BuildLogicalDevice(VkSurfaceKHR& surface)
 {
 	QueueFamilyIndices indices = FindQueueFamilies(physicalDevice, surface);
 
-
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
-
 
 	float queuePriority = 1.0f;
 
@@ -74,13 +67,11 @@ void vkoDevice::BuildLogicalDevice(VkSurfaceKHR& surface)
 
 	VkDeviceCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-
 	createInfo.pQueueCreateInfos = queueCreateInfos.data(); 
 	createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
-
 	createInfo.pEnabledFeatures = &deviceFeatures;
-
-	createInfo.enabledExtensionCount = 0;
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
 	if (vlayers::enableValidationLayers) {
 		createInfo.enabledLayerCount = static_cast<uint32_t>(vlayers::validationLayers.size());
@@ -93,7 +84,6 @@ void vkoDevice::BuildLogicalDevice(VkSurfaceKHR& surface)
 	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &_device) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create logical device!");
 	}
-
 	vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &graphicsQueue);
 	vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &presentQueue);
 }
@@ -107,12 +97,39 @@ bool vkoDevice::VerifyDevice(VkPhysicalDevice device, VkSurfaceKHR& surface)
 {
 	QueueFamilyIndices indices = FindQueueFamilies(device, surface);
 
-	return indices.isComplete();
+	bool extensionSupported = checkDeviceExtensionSupport(device);
+
+	bool swapChainAdequate = false;
+
+	if (extensionSupported)
+	{
+		supportDetails = querySwapChainSupport(device, surface);
+		swapChainAdequate = !supportDetails.formats.empty() && !supportDetails.presentModes.empty();
+
+	}
+
+	return indices.isComplete() && extensionSupported && swapChainAdequate;
+}
+
+bool vkoDevice::checkDeviceExtensionSupport(VkPhysicalDevice device)
+{
+	uint32_t extensionCount;
+	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+
+	std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+	for (const auto& extension : availableExtensions) {
+		requiredExtensions.erase(extension.extensionName);
+	}
+
+	return requiredExtensions.empty();
 }
 
 QueueFamilyIndices vkoDevice::FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR& surface)
 {
-
 	QueueFamilyIndices indices;
 
 	uint32_t queueFamilyCount = 0;
@@ -123,13 +140,13 @@ QueueFamilyIndices vkoDevice::FindQueueFamilies(VkPhysicalDevice device, VkSurfa
 
 	int i = 0;
 	for (const auto& queueFamily : queueFamilies) {
+
 		if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
 			indices.graphicsFamily = i;
 		}
 
 		VkBool32 presentSupport = false;
 		vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
-
 
 		if (presentSupport) {
 			indices.presentFamily = i;
@@ -143,4 +160,44 @@ QueueFamilyIndices vkoDevice::FindQueueFamilies(VkPhysicalDevice device, VkSurfa
 	}
 
 	return indices;
+}
+
+SwapChainSupportDetails vkoDevice::querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR& surface)
+{
+	SwapChainSupportDetails details;
+
+	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);// CAPABILITIES
+
+	uint32_t formatCount;
+	vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
+
+	if (formatCount != 0) {
+		details.formats.resize(formatCount);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data());// FORMATS
+	}
+
+	uint32_t presentModeCount;
+	vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, nullptr);
+
+	if (presentModeCount != 0) {
+		details.presentModes.resize(presentModeCount);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, details.presentModes.data());// PRESENT MODES
+	}
+
+	return details;
+}
+
+const SwapChainSupportDetails& vkoDevice::getSupportDetails() const
+{
+	return supportDetails;
+}
+
+const VkDevice& vkoDevice::getLogicalDevice() const
+{
+	return _device;
+}
+
+const VkPhysicalDevice& vkoDevice::getPhysicalDevice() const
+{
+	return physicalDevice;
 }

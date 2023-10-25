@@ -1,4 +1,4 @@
-﻿add_executable (vulkan_renderer "main.cpp"  "core.hpp" "core.cpp" "window.cpp"  "device.cpp" "instance.cpp" "vlayers.hpp" "vlayers.cpp")
+﻿add_executable (vulkan_renderer "main.cpp"  "core.hpp" "core.cpp" "window.cpp"  "device.cpp" "instance.cpp" "vlayers.hpp" "vlayers.cpp" "swapchain.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET vulkan_renderer PROPERTY CXX_STANDARD 20)
