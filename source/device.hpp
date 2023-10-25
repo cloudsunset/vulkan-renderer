@@ -36,7 +36,7 @@ public:
 
 	const SwapChainSupportDetails& getSupportDetails() const;
 
-	const VkDevice& getLogicalDevice() const;
+	VkDevice& getLogicalDevice();
 
 	const VkPhysicalDevice& getPhysicalDevice() const;
 

@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <iostream>
 
-vkoSwapChain::vkoSwapChain(std::shared_ptr<vkoDevice> device, const std::shared_ptr<vkoWindow>& window) : device{ device->getLogicalDevice()}
+vkoSwapChain::vkoSwapChain(std::shared_ptr<vkoDevice>& device, const std::shared_ptr<vkoWindow>& window) : device{ device->getLogicalDevice()}
 {
     VkSurfaceFormatKHR surfaceFormat;
     VkPresentModeKHR presentMode;

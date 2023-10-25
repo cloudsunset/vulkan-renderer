@@ -192,7 +192,7 @@ const SwapChainSupportDetails& vkoDevice::getSupportDetails() const
 	return supportDetails;
 }
 
-const VkDevice& vkoDevice::getLogicalDevice() const
+VkDevice& vkoDevice::getLogicalDevice()
 {
 	return _device;
 }
