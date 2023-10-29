@@ -27,7 +27,7 @@ private:
 	VkExtent2D swapChainExtent;
 
 	
-
+	void createImageViews();
 
 	VkSurfaceFormatKHR setSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR setPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
