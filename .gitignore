@@ -32,8 +32,8 @@
 *.app
 
 # shaders
-.bat
-.spv
+*.bat
+*.spv
 
 # visual studio
 .vscode/settings.json
