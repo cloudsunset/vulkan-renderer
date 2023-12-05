@@ -9,6 +9,7 @@ vkoDevice::vkoDevice(VkInstance &instance, VkSurfaceKHR &surface) : _instance{ i
 {
 	BuildPhysicalDevice(surface);
 	BuildLogicalDevice(surface);
+	CreateCommandPool();
 }
 
 vkoDevice::~vkoDevice()
@@ -49,7 +50,7 @@ void vkoDevice::BuildPhysicalDevice(VkSurfaceKHR& surface)
 
 void vkoDevice::BuildLogicalDevice(VkSurfaceKHR& surface)
 {
-	QueueFamilyIndices indices = FindQueueFamilies(physicalDevice, surface);
+	indices = FindQueueFamilies(physicalDevice, surface);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
@@ -86,6 +87,19 @@ void vkoDevice::BuildLogicalDevice(VkSurfaceKHR& surface)
 	}
 	vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &graphicsQueue);
 	vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &presentQueue);
+}
+
+void vkoDevice::CreateCommandPool()
+{
+	VkCommandPoolCreateInfo poolInfo{};
+	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+	poolInfo.queueFamilyIndex = indices.graphicsFamily.value();
+
+	if (vkCreateCommandPool(_device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create command pool!");
+	}
 }
 
 void vkoDevice::DestroyLogicalDevice()
@@ -185,6 +199,21 @@ SwapChainSupportDetails vkoDevice::querySwapChainSupport(VkPhysicalDevice device
 	}
 
 	return details;
+}
+
+VkCommandPool& vkoDevice::getCommandPool()
+{
+	return commandPool;
+}
+
+VkQueue vkoDevice::getGraphicsQueue()
+{
+	return graphicsQueue;
+}
+
+VkQueue vkoDevice::getPresentQueue()
+{
+	return presentQueue;
 }
 
 const SwapChainSupportDetails& vkoDevice::getSupportDetails() const

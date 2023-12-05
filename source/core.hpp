@@ -3,6 +3,7 @@
 #include "device.hpp"
 #include "instance.hpp"
 #include "swapchain.hpp"
+#include "pipeline.hpp"
 #include <vector>
 
 class Engine
@@ -24,6 +25,21 @@ private:
 	std::shared_ptr<vkoInstance>  instance;
 	std::shared_ptr<vkoDevice> device;
 	std::shared_ptr<vkoSwapChain>  swapChain;
+
+	std::shared_ptr<vkoPipeline>  pipeline;
+
+	VkCommandBuffer commandBuffer;// add more command buffers
+
+	VkPipelineLayout pipelineLayout;
+
+	void createPipelineLayout();
+	void createPipeline();
+
+	void createCommandBuffer();
+
+	void drawFrame();
+
+	void destroyRenderer();
 
 };
 

@@ -4,24 +4,36 @@
 #include <vector>
 #include <string>
 
+struct PipelineConfigInfo
+{
+	VkPipelineLayout pipelineLayout = nullptr;
+	VkRenderPass renderPass = nullptr;
+
+};
+
 class vkoPipeline
 {
 public:
-	vkoPipeline(VkDevice& device);
+	vkoPipeline(VkDevice& device, PipelineConfigInfo& pipelineConfig);
 	~vkoPipeline();
+
+	vkoPipeline(const vkoPipeline&) = delete;
+	vkoPipeline& operator=(const vkoPipeline&) = delete;
+
+	VkPipeline& getGraphicsPipeline();
+
+	void bind(VkCommandBuffer commandBuffer);
+
 
 private:
 
 	static std::vector<char> readFile(const std::string& filePath);
 	 
-	void createGraphicsPipeline();
-	void createRenderPass();
+	void createGraphicsPipeline(PipelineConfigInfo& pipelineConfig);
 
 	VkShaderModule createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule);
 
 	VkPipeline graphicsPipeline = VK_NULL_HANDLE;
-	VkPipelineLayout pipelineLayout;
-	VkRenderPass renderPass;
 
 	VkDevice& device;
 

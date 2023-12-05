@@ -44,26 +44,39 @@ public:
 
 	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR& surface);
 
+	VkCommandPool& getCommandPool();
+
+	VkQueue getGraphicsQueue();
+	VkQueue getPresentQueue();
+
 private:
 
 	VkInstance &_instance;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	VkDevice _device;
 
+	QueueFamilyIndices indices;
+
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
 
 	SwapChainSupportDetails supportDetails;
+
+	VkCommandPool commandPool;
 	
 	void BuildPhysicalDevice(VkSurfaceKHR& surface);
 
 	void BuildLogicalDevice(VkSurfaceKHR& surface);
+
+	void CreateCommandPool();
 
 	void DestroyLogicalDevice();
 
 	bool VerifyDevice(VkPhysicalDevice device, VkSurfaceKHR& surface);
 
 	bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+
+
 
 	
 

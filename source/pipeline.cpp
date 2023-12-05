@@ -5,16 +5,31 @@
 #include <iostream>
 #include <cassert>
 
-vkoPipeline::vkoPipeline(VkDevice& device) : device{device}
+vkoPipeline::vkoPipeline(VkDevice& device, PipelineConfigInfo& pipelineConfig) : device{device}
 {
+	std::cout << "Build Pipeline" << std::endl;
+	// createRenderPass(pipelineConfig.swapChainFormat);
+	createGraphicsPipeline(pipelineConfig);
 }
 
 vkoPipeline::~vkoPipeline()
 {
-	vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+	vkDestroyPipeline(device, graphicsPipeline, nullptr);
+	//vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+	//vkDestroyRenderPass(device, renderPass, nullptr);
 	vkDestroyShaderModule(device, vertexShaderModule, nullptr);
 	vkDestroyShaderModule(device, fragmentShaderModule, nullptr);
 	vkDestroyPipeline(device, graphicsPipeline, nullptr);
+}
+
+VkPipeline& vkoPipeline::getGraphicsPipeline()
+{
+	return graphicsPipeline;
+}
+
+void vkoPipeline::bind(VkCommandBuffer commandBuffer)
+{
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 }
 
 std::vector<char> vkoPipeline::readFile(const std::string& filePath)
@@ -36,10 +51,11 @@ std::vector<char> vkoPipeline::readFile(const std::string& filePath)
 	return buffer;
 }
 
-void vkoPipeline::createGraphicsPipeline()
+void vkoPipeline::createGraphicsPipeline(PipelineConfigInfo& pipelineConfig)
 {
-	auto vertexShaderCode = readFile("shaders/simple_vert.spv");
-	auto fragmentShaderCode = readFile("shaders/simple_frag.spv");
+	//C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders
+	auto vertexShaderCode = readFile("C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders/simple_vert.spv");
+	auto fragmentShaderCode = readFile("C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders/simple_frag.spv");
 
 	createShaderModule(vertexShaderCode, &vertexShaderModule);
 	createShaderModule(fragmentShaderCode, &fragmentShaderModule);
@@ -120,13 +136,6 @@ void vkoPipeline::createGraphicsPipeline()
 	colorBlending.blendConstants[2] = 0.0f;
 	colorBlending.blendConstants[3] = 0.0f;
 
-	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 0; // Optional
-	pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
-	pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
-	pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
-
 	std::vector<VkDynamicState> dynamicStates = {
 		VK_DYNAMIC_STATE_VIEWPORT,
 		VK_DYNAMIC_STATE_SCISSOR
@@ -137,30 +146,31 @@ void vkoPipeline::createGraphicsPipeline()
 	dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
 	dynamicState.pDynamicStates = dynamicStates.data();
 
-	if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create pipeline layout!");
+
+	VkGraphicsPipelineCreateInfo pipelineInfo{};
+	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+	pipelineInfo.stageCount = 2;
+	pipelineInfo.pStages = shaderStages;
+	pipelineInfo.pVertexInputState = &vertexInputInfo;
+	pipelineInfo.pInputAssemblyState = &inputAssembly;
+	pipelineInfo.pViewportState = &viewportState;
+	pipelineInfo.pRasterizationState = &rasterizer;
+	pipelineInfo.pMultisampleState = &multisampling;
+	pipelineInfo.pDepthStencilState = nullptr; // Optional
+	pipelineInfo.pColorBlendState = &colorBlending;
+	pipelineInfo.pDynamicState = &dynamicState;
+
+	pipelineInfo.layout = pipelineConfig.pipelineLayout;
+
+	pipelineInfo.renderPass = pipelineConfig.renderPass;
+	pipelineInfo.subpass = 0;
+
+	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
+	pipelineInfo.basePipelineIndex = -1; // Optional
+
+	if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create graphics pipeline!");
 	}
-
-}
-
-void vkoPipeline::createRenderPass()
-{
-	/*VkAttachmentDescription colorAttachment{};
-	colorAttachment.format = swapChainImageFormat;
-	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-
-
-
-	VkRenderPassCreateInfo renderPassInfo{};
-	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	renderPassInfo.attachmentCount = 1;
-	renderPassInfo.pAttachments = &colorAttachment;
-	renderPassInfo.subpassCount = 1;
-	renderPassInfo.pSubpasses = &subpass;
-
-	if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create render pass!");
-	}*/
 }
 
 VkShaderModule vkoPipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule)
