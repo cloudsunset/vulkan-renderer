@@ -125,10 +125,7 @@ VkResult vkoSwapChain::acquireNextImage(uint32_t* imageIndex, const VkCommandBuf
 
 VkResult vkoSwapChain::submitCommandBuffers(const VkCommandBuffer commandBuffer, uint32_t* imageIndex, VkQueue graphicsQueue, VkQueue presentQueue)
 {
-    //vkResetCommandBuffer(commandBuffer, 0);
-    //vkResetCommandBuffer(commandBuffer, /*VkCommandBufferResetFlagBits*/ 0);
-    //vkWaitForFences(device, 1, &inFlightFence, VK_TRUE, UINT64_MAX);
-
+   
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
@@ -145,7 +142,6 @@ VkResult vkoSwapChain::submitCommandBuffers(const VkCommandBuffer commandBuffer,
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
 
-    //vkResetFences(device, 1, &inFlightFence);
     if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFence) != VK_SUCCESS) {
         throw std::runtime_error("failed to submit draw command buffer!");
     }

@@ -59,8 +59,6 @@ void Engine::createCommandBuffer()
 		throw std::runtime_error("failed to allocate command buffers!");
 	}
 
-	// record
-
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = 0; // Optional

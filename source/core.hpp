@@ -28,7 +28,7 @@ private:
 
 	std::shared_ptr<vkoPipeline>  pipeline;
 
-	VkCommandBuffer commandBuffer;// add more command buffers
+	VkCommandBuffer commandBuffer;// add more command buffers ?
 
 	VkPipelineLayout pipelineLayout;
 
