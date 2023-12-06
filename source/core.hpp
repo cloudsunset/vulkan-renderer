@@ -36,6 +36,7 @@ private:
 	void createPipeline();
 
 	void createCommandBuffer();
+	void recordComandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	void drawFrame();
 

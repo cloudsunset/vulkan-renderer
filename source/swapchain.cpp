@@ -125,7 +125,7 @@ VkResult vkoSwapChain::acquireNextImage(uint32_t* imageIndex, const VkCommandBuf
 
 VkResult vkoSwapChain::submitCommandBuffers(const VkCommandBuffer commandBuffer, uint32_t* imageIndex, VkQueue graphicsQueue, VkQueue presentQueue)
 {
-   
+
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
