@@ -81,13 +81,13 @@ void Engine::recordComandBuffer(VkCommandBuffer commandBuffer, uint32_t imageInd
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = swapChain->getSwapChainExtent();
 
-	VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
+	VkClearValue clearColor = { {{0.749f, 0.f, 0.376f, 1.0f}} };
 	renderPassInfo.clearValueCount = 1;
 	renderPassInfo.pClearValues = &clearColor;
 
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	//vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);// on pipeline class
+	
 		pipeline->bind(commandBuffer);
 
 		VkViewport viewport{};
@@ -107,7 +107,8 @@ void Engine::recordComandBuffer(VkCommandBuffer commandBuffer, uint32_t imageInd
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
 		vkCmdDraw(commandBuffer, 3, 1, 0, 0);
-
+	
+	
 	vkCmdEndRenderPass(commandBuffer);
 
 	if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {

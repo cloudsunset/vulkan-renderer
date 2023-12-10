@@ -19,3 +19,6 @@ target_link_libraries(vulkan_renderer PRIVATE glfw)
 target_link_libraries(vulkan_renderer PRIVATE glm::glm)
 target_link_libraries(vulkan_renderer PRIVATE Vulkan::Vulkan)
 target_link_libraries(vulkan_renderer PRIVATE tinyobjloader::tinyobjloader)
+
+add_custom_command(TARGET vulkan_renderer POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/shaders" "${CMAKE_BINARY_DIR}/source/shaders" COMMENT "Copying directory from ${SOURCE_DIR} to ${DESTINATION_DIR}")

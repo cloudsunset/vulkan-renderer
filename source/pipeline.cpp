@@ -54,8 +54,11 @@ std::vector<char> vkoPipeline::readFile(const std::string& filePath)
 void vkoPipeline::createGraphicsPipeline(PipelineConfigInfo& pipelineConfig)
 {
 	//C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders
-	auto vertexShaderCode = readFile("C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders/simple_vert.spv");
-	auto fragmentShaderCode = readFile("C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders/simple_frag.spv");
+	/*auto vertexShaderCode = readFile("C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders/simple_vert.spv");
+	auto fragmentShaderCode = readFile("C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders/simple_frag.spv");*/
+	auto vertexShaderCode = readFile("shaders/simple_vert.spv");
+	auto fragmentShaderCode = readFile("shaders/simple_frag.spv");
+
 
 	createShaderModule(vertexShaderCode, &vertexShaderModule);
 	createShaderModule(fragmentShaderCode, &fragmentShaderModule);
