@@ -12,9 +12,7 @@ vkoDevice::vkoDevice(VkInstance &instance, VkSurfaceKHR &surface) : _instance{ i
 	CreateCommandPool();
 }
 
-vkoDevice::~vkoDevice()
-{
-}
+vkoDevice::~vkoDevice(){}
 
 void vkoDevice::BuildPhysicalDevice(VkSurfaceKHR& surface)
 {
@@ -105,6 +103,11 @@ void vkoDevice::CreateCommandPool()
 void vkoDevice::DestroyLogicalDevice()
 {
 	vkDestroyDevice(_device, nullptr);
+}
+
+void vkoDevice::DestroyCommandPool()
+{
+	vkDestroyCommandPool(_device, commandPool, nullptr);
 }
 
 bool vkoDevice::VerifyDevice(VkPhysicalDevice device, VkSurfaceKHR& surface)

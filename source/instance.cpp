@@ -6,12 +6,10 @@
 vkoInstance::vkoInstance(const char* instance_name)
 {
 	BuildInstance(instance_name);
-	std::cout << "Build Instance" << std::endl;
+	
 }
 
-vkoInstance::~vkoInstance()
-{
-}
+vkoInstance::~vkoInstance(){}
 
 VkInstance& vkoInstance::get()
 {
@@ -71,14 +69,16 @@ void vkoInstance::BuildInstance(const char* instance_name)
 
 void vkoInstance::DestroyInstance()
 {
-	std::cout << "destructors" << std::endl;
+	vkDestroyInstance(m_Instance, nullptr);
+}
+
+void vkoInstance::DestroyValidationLayer()
+{
 	if (vlayers::enableValidationLayers)
 	{
 		vlayers::DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr);
 		std::cout << "DestroyDebugUtilsMessengerEXT" << std::endl;
 	}
-
-	vkDestroyInstance(m_Instance, nullptr);
 }
 
 

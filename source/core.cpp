@@ -18,9 +18,7 @@ Engine::Engine()
 	createCommandBuffer();
 }
 
-Engine::~Engine()
-{
-}
+Engine::~Engine(){}
 
 void Engine::createPipelineLayout()
 {
@@ -47,7 +45,6 @@ void Engine::createPipeline()
 
 void Engine::createCommandBuffer()
 {
-	// TODO create swapchain extent variable
 
 	VkCommandBufferAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -139,11 +136,42 @@ void Engine::drawFrame()
 	}
 }
 
+void Engine::destroyPipelineLayout()
+{
+	vkDestroyPipelineLayout(device->getLogicalDevice(), pipelineLayout, nullptr);
+}
+
 
 
 void Engine::destroyRenderer()
 {
-	//vkDestroyCommandPool(device->getLogicalDevice(), commandPool, nullptr);
+
+	swapChain->DestroySyncObjects();
+
+	device->DestroyCommandPool();
+
+	swapChain->DestroyFramebuffers();
+
+	pipeline->DestroyPipeline();
+
+	this->destroyPipelineLayout();
+
+	swapChain->DestroyRenderPass();
+
+	swapChain->DestroyImageViews();
+
+	swapChain->DestroySwapChainKHR();
+
+	device->DestroyLogicalDevice();
+
+	instance->DestroyValidationLayer();
+
+	window->destroySurface(instance->get());
+
+	instance->DestroyInstance();
+
+	window->destroyWindow();
+
 }
 
 void Engine::Run()
@@ -155,6 +183,7 @@ void Engine::Run()
 	}
 
 	vkDeviceWaitIdle(device->getLogicalDevice());
+	destroyRenderer();
 }
 
 

@@ -15,10 +15,12 @@ public:
 
 	const char* instance_name = "instance name test";
 
+	void DestroyInstance();
+	void DestroyValidationLayer();
+
 private:
 
 	void BuildInstance(const char* instance_name);
-	void DestroyInstance();
 	
 	VkInstance m_Instance;
 	VkDebugUtilsMessengerEXT m_DebugMessenger;

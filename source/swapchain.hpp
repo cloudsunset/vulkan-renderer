@@ -16,7 +16,12 @@ public:
 	VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
 	VkExtent2D getSwapChainExtent() { return swapChainExtent; }
 
-	void DestroySwapChain();
+	void DestroySwapChainKHR();
+	void DestroySyncObjects();
+	void DestroyFramebuffers();
+	void DestroyImageViews();
+	void DestroyRenderPass();
+
 
 	VkResult acquireNextImage(uint32_t* imageIndex, const VkCommandBuffer commandBuffer);
 	VkResult submitCommandBuffers(const VkCommandBuffer commandBuffer, uint32_t* imageIndex, VkQueue graphicsQueue, VkQueue presentQueue);
@@ -54,7 +59,5 @@ private:
 	VkSurfaceFormatKHR setSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR setPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 	VkExtent2D setExtent(const VkSurfaceCapabilitiesKHR& capabilities, const std::shared_ptr<vkoWindow>& window);
-
-
 
 };

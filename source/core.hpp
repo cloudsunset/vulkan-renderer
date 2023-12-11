@@ -28,7 +28,7 @@ private:
 
 	std::shared_ptr<vkoPipeline>  pipeline;
 
-	VkCommandBuffer commandBuffer;// add more command buffers ?
+	VkCommandBuffer commandBuffer;
 
 	VkPipelineLayout pipelineLayout;
 
@@ -39,6 +39,8 @@ private:
 	void recordComandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	void drawFrame();
+
+	void destroyPipelineLayout();
 
 	void destroyRenderer();
 

@@ -49,6 +49,9 @@ public:
 	VkQueue getGraphicsQueue();
 	VkQueue getPresentQueue();
 
+	void DestroyLogicalDevice();
+	void DestroyCommandPool();
+
 private:
 
 	VkInstance &_instance;
@@ -70,17 +73,8 @@ private:
 
 	void CreateCommandPool();
 
-	void DestroyLogicalDevice();
-
 	bool VerifyDevice(VkPhysicalDevice device, VkSurfaceKHR& surface);
 
 	bool checkDeviceExtensionSupport(VkPhysicalDevice device);
-
-
-
-	
-
-
-
 
 };

@@ -15,7 +15,6 @@ vkoSwapChain::vkoSwapChain(std::shared_ptr<vkoDevice>& device, const std::shared
     configSwapChain(surfaceFormat, presentMode, extent, window, swapChainSupport);
 
     uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
-
     
     if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
         imageCount = swapChainSupport.capabilities.maxImageCount;
@@ -76,9 +75,7 @@ vkoSwapChain::vkoSwapChain(std::shared_ptr<vkoDevice>& device, const std::shared
     createSyncObjects();
 }
 
-vkoSwapChain::~vkoSwapChain()
-{
-}
+vkoSwapChain::~vkoSwapChain(){}
 
 void vkoSwapChain::configSwapChain(VkSurfaceFormatKHR& surfaceFormat, VkPresentModeKHR& presentMode, VkExtent2D& extent, const std::shared_ptr<vkoWindow>& window, const SwapChainSupportDetails& supportedProperties)
 {
@@ -95,21 +92,36 @@ VkFormat& vkoSwapChain::getSwapChainImageFormat()
     return swapChainImageFormat;
 }
 
-void vkoSwapChain::DestroySwapChain()
+
+void vkoSwapChain::DestroySwapChainKHR()
+{
+    vkDestroySwapchainKHR(device, swapChain, nullptr);
+}
+
+void vkoSwapChain::DestroySyncObjects()
 {
     vkDestroySemaphore(device, imageAvailableSemaphore, nullptr);
     vkDestroySemaphore(device, renderFinishedSemaphore, nullptr);
     vkDestroyFence(device, inFlightFence, nullptr);
+}
 
+void vkoSwapChain::DestroyFramebuffers()
+{
     for (auto framebuffer : swapChainFramebuffers) {
         vkDestroyFramebuffer(device, framebuffer, nullptr);
     }
+}
 
+void vkoSwapChain::DestroyImageViews()
+{
     for (auto imageView : swapChainImageViews) {
         vkDestroyImageView(device, imageView, nullptr);
     }
+}
 
-    vkDestroySwapchainKHR(device, swapChain, nullptr);
+void vkoSwapChain::DestroyRenderPass()
+{
+    vkDestroyRenderPass(device, renderPass, nullptr);
 }
 
 VkResult vkoSwapChain::acquireNextImage(uint32_t* imageIndex, const VkCommandBuffer commandBuffer)

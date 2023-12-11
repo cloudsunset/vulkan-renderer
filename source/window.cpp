@@ -6,9 +6,7 @@ vkoWindow::vkoWindow(int w, int h ) : width{w}, height{h}
 	BuildWindow();
 }
 
-vkoWindow::~vkoWindow()
-{
-}
+vkoWindow::~vkoWindow(){}
 
 void vkoWindow::BuildWindow()
 {

@@ -24,6 +24,7 @@ public:
 
 	void bind(VkCommandBuffer commandBuffer);
 
+	void DestroyPipeline();
 
 private:
 
@@ -39,7 +40,5 @@ private:
 
 	VkShaderModule vertexShaderModule = VK_NULL_HANDLE;
 	VkShaderModule fragmentShaderModule = VK_NULL_HANDLE;
-
-
 
 };

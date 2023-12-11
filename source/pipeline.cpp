@@ -7,20 +7,10 @@
 
 vkoPipeline::vkoPipeline(VkDevice& device, PipelineConfigInfo& pipelineConfig) : device{device}
 {
-	std::cout << "Build Pipeline" << std::endl;
-	// createRenderPass(pipelineConfig.swapChainFormat);
 	createGraphicsPipeline(pipelineConfig);
 }
 
-vkoPipeline::~vkoPipeline()
-{
-	vkDestroyPipeline(device, graphicsPipeline, nullptr);
-	//vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-	//vkDestroyRenderPass(device, renderPass, nullptr);
-	vkDestroyShaderModule(device, vertexShaderModule, nullptr);
-	vkDestroyShaderModule(device, fragmentShaderModule, nullptr);
-	vkDestroyPipeline(device, graphicsPipeline, nullptr);
-}
+vkoPipeline::~vkoPipeline(){}
 
 VkPipeline& vkoPipeline::getGraphicsPipeline()
 {
@@ -30,6 +20,11 @@ VkPipeline& vkoPipeline::getGraphicsPipeline()
 void vkoPipeline::bind(VkCommandBuffer commandBuffer)
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+}
+
+void vkoPipeline::DestroyPipeline()
+{
+	vkDestroyPipeline(device, graphicsPipeline, nullptr);
 }
 
 std::vector<char> vkoPipeline::readFile(const std::string& filePath)
@@ -53,12 +48,8 @@ std::vector<char> vkoPipeline::readFile(const std::string& filePath)
 
 void vkoPipeline::createGraphicsPipeline(PipelineConfigInfo& pipelineConfig)
 {
-	//C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders
-	/*auto vertexShaderCode = readFile("C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders/simple_vert.spv");
-	auto fragmentShaderCode = readFile("C:/Users/rodri/Desktop/workspace/vulkan-engine/shaders/simple_frag.spv");*/
 	auto vertexShaderCode = readFile("shaders/simple_vert.spv");
 	auto fragmentShaderCode = readFile("shaders/simple_frag.spv");
-
 
 	createShaderModule(vertexShaderCode, &vertexShaderModule);
 	createShaderModule(fragmentShaderCode, &fragmentShaderModule);
@@ -174,6 +165,10 @@ void vkoPipeline::createGraphicsPipeline(PipelineConfigInfo& pipelineConfig)
 	if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
+
+	vkDestroyShaderModule(device, vertexShaderModule, nullptr);
+	vkDestroyShaderModule(device, fragmentShaderModule, nullptr);
+
 }
 
 VkShaderModule vkoPipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule)
