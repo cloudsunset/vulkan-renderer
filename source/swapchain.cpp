@@ -92,7 +92,6 @@ VkFormat& vkoSwapChain::getSwapChainImageFormat()
     return swapChainImageFormat;
 }
 
-
 void vkoSwapChain::DestroySwapChainKHR()
 {
     vkDestroySwapchainKHR(device, swapChain, nullptr);

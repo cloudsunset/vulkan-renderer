@@ -60,7 +60,6 @@ void Engine::createCommandBuffer()
 
 void Engine::recordComandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
 {
-
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = 0; // Optional
@@ -73,7 +72,7 @@ void Engine::recordComandBuffer(VkCommandBuffer commandBuffer, uint32_t imageInd
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassInfo.renderPass = swapChain->getRenderPass();
-	renderPassInfo.framebuffer = swapChain->getFrameBuffer(imageIndex);// PROBLEMMAMAMAMAMAM
+	renderPassInfo.framebuffer = swapChain->getFrameBuffer(imageIndex);
 
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = swapChain->getSwapChainExtent();
@@ -84,7 +83,6 @@ void Engine::recordComandBuffer(VkCommandBuffer commandBuffer, uint32_t imageInd
 
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	
 		pipeline->bind(commandBuffer);
 
 		VkViewport viewport{};
@@ -125,9 +123,11 @@ void Engine::drawFrame()
 		throw std::runtime_error("Failed to adquire swap chain image");
 	}
 
+	vkResetCommandBuffer(commandBuffer, 0);
+
 	recordComandBuffer(commandBuffer, imageIndex);
 
-	//vkResetCommandBuffer(commandBuffer, 0);
+	
 	result = swapChain->submitCommandBuffers(commandBuffer, &imageIndex, device->getGraphicsQueue(), device->getPresentQueue());
 
 	if (result != VK_SUCCESS)
@@ -140,8 +140,6 @@ void Engine::destroyPipelineLayout()
 {
 	vkDestroyPipelineLayout(device->getLogicalDevice(), pipelineLayout, nullptr);
 }
-
-
 
 void Engine::destroyRenderer()
 {
