@@ -14,6 +14,7 @@ public:
 	VkFormat& getSwapChainImageFormat();
 	VkRenderPass getRenderPass() { return renderPass; }
 	VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
+	size_t imageCount() { return swapChainImages.size(); }
 	VkExtent2D getSwapChainExtent() { return swapChainExtent; }
 
 	void DestroySwapChainKHR();
@@ -23,8 +24,8 @@ public:
 	void DestroyRenderPass();
 
 
-	VkResult acquireNextImage(uint32_t* imageIndex, const VkCommandBuffer commandBuffer);
-	VkResult submitCommandBuffers(const VkCommandBuffer commandBuffer, uint32_t* imageIndex, VkQueue graphicsQueue, VkQueue presentQueue);
+	VkResult acquireNextImage(uint32_t* imageIndex);
+	VkResult submitCommandBuffers(const VkCommandBuffer* commandBuffers, uint32_t* imageIndex, VkQueue graphicsQueue, VkQueue presentQueue);
 
 private:
 
@@ -43,10 +44,11 @@ private:
 
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
-	VkSemaphore imageAvailableSemaphore;
-	VkSemaphore renderFinishedSemaphore;
-	VkFence inFlightFence;
+	std::vector<VkSemaphore> imageAvailableSemaphores;
+	std::vector<VkSemaphore> renderFinishedSemaphores;
+	std::vector<VkFence> inFlightFences;
 
+	uint32_t currentFrame = 0;
 
 	void createRenderPass();
 	

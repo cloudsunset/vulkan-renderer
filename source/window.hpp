@@ -4,6 +4,8 @@
 #include <string>
 #include "instance.hpp"
 
+#define MAX_FRAMES_IN_FLIGHT 2
+
 class vkoWindow
 {
 
@@ -30,7 +32,6 @@ private:
 
 	std::string windowName;
 	GLFWwindow* window = nullptr;
-
 	VkSurfaceKHR surface;
 
 };
