@@ -58,6 +58,8 @@ private:
 
 	void createSyncObjects();
 
+	void PrintSizeObjects();
+
 	VkSurfaceFormatKHR setSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR setPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 	VkExtent2D setExtent(const VkSurfaceCapabilitiesKHR& capabilities, const std::shared_ptr<vkoWindow>& window);

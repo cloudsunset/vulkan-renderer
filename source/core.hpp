@@ -33,6 +33,7 @@ private:
 	void createPipeline();
 
 	void createCommandBuffer();
+	void recordCommandBuffer(uint32_t imageIndex);
 
 	void drawFrame();
 

@@ -6,6 +6,8 @@
 
 vkoSwapChain::vkoSwapChain(std::shared_ptr<vkoDevice>& device, const std::shared_ptr<vkoWindow>& window) : device{ device->getLogicalDevice()}
 {
+    vkoSwapChain::currentFrame = 0;
+
     VkSurfaceFormatKHR surfaceFormat;
     VkPresentModeKHR presentMode;
     VkExtent2D extent;
@@ -75,6 +77,8 @@ vkoSwapChain::vkoSwapChain(std::shared_ptr<vkoDevice>& device, const std::shared
     createFrameBuffers();
 
     createSyncObjects();
+
+    PrintSizeObjects();
 }
 
 vkoSwapChain::~vkoSwapChain(){}
@@ -310,6 +314,13 @@ void vkoSwapChain::createSyncObjects()
             throw std::runtime_error("failed to create semaphores!");
         }
     }
+}
+
+void vkoSwapChain::PrintSizeObjects()
+{
+    std::cout << "imageAvailableSemaphores: " << imageAvailableSemaphores.size()<< std::endl;
+    std::cout << "renderFinishedSemaphores: " << renderFinishedSemaphores.size() << std::endl;
+    std::cout << "inFlightFences: " << inFlightFences.size() << std::endl;
 }
 
 VkSurfaceFormatKHR vkoSwapChain::setSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)

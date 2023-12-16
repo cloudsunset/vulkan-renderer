@@ -56,60 +56,60 @@ void Engine::createCommandBuffer()
 	if (vkAllocateCommandBuffers(device->getLogicalDevice(), &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate command buffers!");
 	}
+}
 
-	for (int i = 0; i < commandBuffers.size(); i++)
-	{
-		VkCommandBufferBeginInfo beginInfo{};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.flags = 0; // Optional
-		beginInfo.pInheritanceInfo = nullptr; // Optional
+void Engine::recordCommandBuffer(uint32_t imageIndex)
+{
+	VkCommandBufferBeginInfo beginInfo{};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = 0; // Optional
+	beginInfo.pInheritanceInfo = nullptr; // Optional
 
-		if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
-			throw std::runtime_error("failed to begin recording command buffer!");
-		}
-
-		VkRenderPassBeginInfo renderPassInfo{};
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = swapChain->getRenderPass();
-		renderPassInfo.framebuffer = swapChain->getFrameBuffer(i);
-
-		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = swapChain->getSwapChainExtent();
-
-		VkClearValue clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-		renderPassInfo.clearValueCount = 1;
-		renderPassInfo.pClearValues = &clearColor;
-
-		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-			pipeline->bind(commandBuffers[i]);
-
-			VkViewport viewport{};
-			viewport.x = 0.0f;
-			viewport.y = 0.0f;
-			viewport.width = static_cast<float>(swapChain->getSwapChainExtent().width);
-			viewport.height = static_cast<float>(swapChain->getSwapChainExtent().height);
-			viewport.minDepth = 0.0f;
-			viewport.maxDepth = 1.0f;
-
-			vkCmdSetViewport(commandBuffers[i], 0, 1, &viewport);
-
-			VkRect2D scissor{};
-			scissor.offset = { 0, 0 };
-			scissor.extent = swapChain->getSwapChainExtent();
-
-			vkCmdSetScissor(commandBuffers[i], 0, 1, &scissor);
-
-			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
-
-
-		vkCmdEndRenderPass(commandBuffers[i]);
-
-		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
-			throw std::runtime_error("failed to record command buffer!");
-
-		}
+	if (vkBeginCommandBuffer(commandBuffers[imageIndex], &beginInfo) != VK_SUCCESS) {
+		throw std::runtime_error("failed to begin recording command buffer!");
 	}
+
+	VkRenderPassBeginInfo renderPassInfo{};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassInfo.renderPass = swapChain->getRenderPass();
+	renderPassInfo.framebuffer = swapChain->getFrameBuffer(imageIndex);
+
+	renderPassInfo.renderArea.offset = { 0, 0 };
+	renderPassInfo.renderArea.extent = swapChain->getSwapChainExtent();
+
+	VkClearValue clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+	renderPassInfo.clearValueCount = 1;
+	renderPassInfo.pClearValues = &clearColor;
+
+	vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+		pipeline->bind(commandBuffers[imageIndex]);
+
+		VkViewport viewport{};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = static_cast<float>(swapChain->getSwapChainExtent().width);
+		viewport.height = static_cast<float>(swapChain->getSwapChainExtent().height);
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+
+		vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
+
+		VkRect2D scissor{};
+		scissor.offset = { 0, 0 };
+		scissor.extent = swapChain->getSwapChainExtent();
+
+		vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
+
+		vkCmdDraw(commandBuffers[imageIndex], 3, 1, 0, 0);
+
+	vkCmdEndRenderPass(commandBuffers[imageIndex]);
+
+	if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS) {
+		throw std::runtime_error("failed to record command buffer!");
+
+	}
+	
 }
 
 void Engine::drawFrame()
@@ -121,6 +121,8 @@ void Engine::drawFrame()
 	{
 		throw std::runtime_error("Failed to adquire swap chain image");
 	}
+
+	recordCommandBuffer(imageIndex);
 	
 	result = swapChain->submitCommandBuffers(&commandBuffers[imageIndex], &imageIndex, device->getGraphicsQueue(), device->getPresentQueue());
 
