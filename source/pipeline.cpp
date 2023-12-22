@@ -1,5 +1,5 @@
 #include "pipeline.hpp"
-
+#include "renderitem.hpp"
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
@@ -70,12 +70,15 @@ void vkoPipeline::createGraphicsPipeline(PipelineConfigInfo& pipelineConfig)
 
 	// Pipeline creation
 
+	auto bindingDescription = renderitem::Vertex::getBindingDescriptions();
+	auto attributeDescriptions = renderitem::Vertex::getAttributeDescriptions();
+
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	vertexInputInfo.vertexBindingDescriptionCount = 0;
-	vertexInputInfo.pVertexBindingDescriptions = nullptr; // Optional
-	vertexInputInfo.vertexAttributeDescriptionCount = 0;
-	vertexInputInfo.pVertexAttributeDescriptions = nullptr; // Optional
+	vertexInputInfo.vertexBindingDescriptionCount = 1;
+	vertexInputInfo.pVertexBindingDescriptions = &bindingDescription; // Optional
+	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+	vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data(); // Optional
 
 	VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
 	inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

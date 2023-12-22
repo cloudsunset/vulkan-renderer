@@ -1,17 +1,21 @@
 #include "core.hpp"
 #include <stdexcept>
 #include <vector>
+#include <array>
 #include <iostream>
 #include <cstring>
 #include "vlayers.hpp"
+
+
 
 Engine::Engine()
 {
 	window = std::make_shared<vkoWindow>(width, height);
 	instance = std::make_shared<vkoInstance>(instance_name);
 	window->createSurface(instance->get());
-	device = std::make_shared<vkoDevice>(instance->get(), window->getSurface());
-	swapChain = std::make_shared<vkoSwapChain>(device, window);
+	device = std::make_unique<vkoDevice>(instance->get(), window->getSurface());
+	swapChain = std::make_unique<vkoSwapChain>(device, window);
+
 
 	createPipelineLayout();
 	createPipeline();
@@ -36,11 +40,12 @@ void Engine::createPipelineLayout()
 
 void Engine::createPipeline()
 {
+
 	PipelineConfigInfo pipelineConfig{};
 	pipelineConfig.renderPass = swapChain->getRenderPass();
 	pipelineConfig.pipelineLayout = pipelineLayout;
 
-	pipeline = std::make_shared<vkoPipeline>(device->getLogicalDevice(), pipelineConfig);
+	pipeline = std::make_unique<vkoPipeline>(device->getLogicalDevice(), pipelineConfig);
 }
 
 void Engine::createCommandBuffer()
@@ -179,5 +184,3 @@ void Engine::Run()
 	vkDeviceWaitIdle(device->getLogicalDevice());
 	destroyRenderer();
 }
-
-

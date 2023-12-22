@@ -7,7 +7,7 @@
 class vkoSwapChain
 {
 public:
-	vkoSwapChain(std::shared_ptr<vkoDevice>& device, const std::shared_ptr<vkoWindow>& window);
+	vkoSwapChain(std::unique_ptr<vkoDevice>& device, const std::shared_ptr<vkoWindow>& window);
 	~vkoSwapChain();
 
 	void configSwapChain(VkSurfaceFormatKHR& surfaceFormat, VkPresentModeKHR& presentMode,VkExtent2D& extent, const std::shared_ptr<vkoWindow>& window, const SwapChainSupportDetails& supportedProperties);

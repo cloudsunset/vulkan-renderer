@@ -5,6 +5,7 @@
 #include "swapchain.hpp"
 #include "pipeline.hpp"
 #include <vector>
+#include <glm/glm.hpp>
 
 class Engine
 {
@@ -23,9 +24,10 @@ private:
 	
 	std::shared_ptr<vkoWindow>  window;
 	std::shared_ptr<vkoInstance>  instance;
-	std::shared_ptr<vkoDevice> device;
-	std::shared_ptr<vkoSwapChain>  swapChain;
-	std::shared_ptr<vkoPipeline>  pipeline;
+	std::unique_ptr<vkoDevice> device;
+	std::unique_ptr<vkoSwapChain>  swapChain;
+	std::unique_ptr<vkoPipeline>  pipeline;
+
 	std::vector<VkCommandBuffer> commandBuffers;
 	VkPipelineLayout pipelineLayout;
 

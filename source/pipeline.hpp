@@ -8,7 +8,6 @@ struct PipelineConfigInfo
 {
 	VkPipelineLayout pipelineLayout = nullptr;
 	VkRenderPass renderPass = nullptr;
-
 };
 
 class vkoPipeline
